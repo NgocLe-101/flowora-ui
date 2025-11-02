@@ -1,5 +1,4 @@
 import { signUpSchema, type TSignUpSchema } from "@/lib/validators";
-import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from "sonner";
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,8 +8,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'
+import { useRegister } from "@/hooks/useAuth";
 
 export default function SignUp() {
   const form = useForm<TSignUpSchema>({
@@ -22,36 +20,21 @@ export default function SignUp() {
     mode: "onChange"
   })
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: TSignUpSchema) => {
-      const response = await fetch(
-        `${BASE_URL}/user/register`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
-      }
-      return response.json();
-    },
-    onSuccess: () => {
-      toast.success('Account created successfully! Please sign in.');
-      form.reset();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      console.log(error)
-    }
-  });
+  const { mutate, isPending, isError, error } = useRegister();
 
   function onSubmit(data: TSignUpSchema) {
-    mutate(data);
+    mutate(data, {
+      onSuccess: () => {
+        toast.success('Account created successfully! Please sign in.');
+        form.reset();
+      },
+      onError: (err) => {
+        const errorMessage = 
+          (err as any)?.response?.data?.message || 
+          'Registration failed. Please try again.';
+        toast.error(errorMessage);
+      }
+    });
   }
 
   return (
@@ -67,17 +50,22 @@ export default function SignUp() {
               <Controller name="email" control={form.control} render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="input-email">Email</FieldLabel>
-                  <Input {...field} id="input-email" aria-invalid={fieldState.invalid} placeholder="name@example.com" autoComplete="off" />
+                  <Input {...field} id="input-email" aria-invalid={fieldState.invalid} placeholder="name@example.com" autoComplete="email" />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )} />
               <Controller name="password" control={form.control} render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="input-password">Password</FieldLabel>
-                  <Input {...field} id="input-password" type="password" aria-invalid={fieldState.invalid} placeholder="********" autoComplete="off" />
+                  <Input {...field} id="input-password" type="password" aria-invalid={fieldState.invalid} placeholder="********" autoComplete="new-password" />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )} />
+              {isError && (
+                <div className="text-sm text-red-600 text-center">
+                  {(error as any)?.response?.data?.message || 'An error occurred. Please try again.'}
+                </div>
+              )}
             </FieldGroup>
           </form>
         </CardContent>
@@ -92,4 +80,4 @@ export default function SignUp() {
       </Card>
     </div>
   )
-} 
+}

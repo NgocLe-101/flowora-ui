@@ -8,6 +8,9 @@ import { Layout } from './components/Layout.tsx'
 import HomePage from './pages/Home.tsx'
 import Login from './pages/Login.tsx'
 import SignUp from './pages/SignUp.tsx'
+import Dashboard from './pages/Dashboard.tsx'
+import { AuthProvider } from './contexts/AuthContext.tsx'
+import { ProtectedRoute } from './components/ProtectedRoute.tsx'
 
 const router = createBrowserRouter([
   {
@@ -25,6 +28,15 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <SignUp />
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: 'dashboard',
+            element: <Dashboard />
+          }
+        ]
       }
     ]
   },
@@ -33,7 +45,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </App>
   </StrictMode>,
 )

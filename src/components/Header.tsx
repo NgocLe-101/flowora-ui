@@ -1,7 +1,10 @@
 import { Link, NavLink } from "react-router";
 import { Button } from "./ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { User } from "lucide-react";
 
 export function Header() {
+  const { isAuthenticated, user } = useAuth();
   const navLinkClass = ({ isActive }: { isActive: boolean }) => isActive ? 'text-black font-medium' : 'text-gray-600 hover:text-black';
 
   return (
@@ -23,12 +26,25 @@ export function Header() {
         </nav>
       </div>
       <div className="flex items-center gap-4">
-        <Button variant="ghost" asChild>
-          <Link to="/login">Login</Link>
-        </Button>
-        <Button asChild>
-          <Link to="/signup">Signup</Link>
-        </Button>
+        {isAuthenticated ? (
+          <>
+            <Button variant="ghost" asChild>
+              <Link to="/dashboard">
+                <User className="mr-2 h-4 w-4" />
+                {user?.email}
+              </Link>
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button variant="ghost" asChild>
+              <Link to="/login">Login</Link>
+            </Button>
+            <Button asChild>
+              <Link to="/signup">Signup</Link>
+            </Button>
+          </>
+        )}
       </div>
     </header>
   )
