@@ -32,22 +32,22 @@ export const authService = {
     const response = await api.post('/auth/login', { email, password });
     return response.data;
   },
-  
+
   register: async (email: string, password: string) => {
     const response = await api.post('/user/register', { email, password });
     return response.data;
   },
-  
+
   logout: async () => {
     const response = await api.post('/auth/logout');
     return response.data;
   },
-  
+
   getCurrentUser: async () => {
     const response = await api.get('/auth/me');
     return response.data;
   },
-  
+
   refreshToken: async (refreshToken: string) => {
     const response = await api.post('/auth/refresh', { refreshToken });
     return response.data;
