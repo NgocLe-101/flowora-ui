@@ -26,7 +26,7 @@ export default function Login() {
       onError: (err) => {
         // Extract error message
         const errorMessage =
-          (err as any)?.response?.data?.message ||
+          (err.response?.data as Error).message ||
           'Login failed. Please check your credentials.';
         toast.error(errorMessage);
       },
@@ -74,7 +74,7 @@ export default function Login() {
               )} />
               {isError && (
                 <div className="text-sm text-red-600 text-center">
-                  {(error as any)?.response?.data?.message || 'An error occurred. Please try again.'}
+                  {(error.response?.data as Error).message || 'An error occurred. Please try again.'}
                 </div>
               )}
             </FieldGroup>

@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router';
+import { HttpStatusCode, type AxiosError } from 'axios';
+import { PATH } from '@/route/path';
 
 interface LoginCredentials {
   email: string;
@@ -25,7 +27,12 @@ export function useLogin() {
     onSuccess: (data) => {
       login(data.accessToken, data.refreshToken, data.user);
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-      navigate('/dashboard');
+      navigate(PATH.DASHBOARD.fullPath);
+    },
+    onError: (err: AxiosError) => {
+      if (err.response?.status === HttpStatusCode.Unauthorized) {
+        navigate(PATH.LOGIN.fullPath)
+      }
     }
   });
 }
@@ -38,7 +45,7 @@ export function useRegister() {
     mutationFn: ({ email, password }: RegisterCredentials) =>
       authService.register(email, password),
     onSuccess: () => {
-      navigate('/login');
+      navigate(PATH.LOGIN.fullPath);
     },
   });
 }
@@ -61,7 +68,7 @@ export function useLogout() {
     onSuccess: () => {
       logout();
       queryClient.clear();
-      navigate('/login');
+      navigate(PATH.LOGIN.fullPath);
     },
   });
 }
