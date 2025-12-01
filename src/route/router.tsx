@@ -4,6 +4,7 @@ import Dashboard from "@/pages/Dashboard";
 import HomePage from "@/pages/Home";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
+import AuthCallback from "@/pages/AuthCallback";
 import { createBrowserRouter } from "react-router";
 import { PATH } from "./path";
 
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: PATH.SIGNUP.name,
         element: <SignUp />
+      },
+      {
+        path: PATH.AUTH_CALLBACK.name,
+        element: <AuthCallback />
       },
       {
         element: <ProtectedRoute />,
