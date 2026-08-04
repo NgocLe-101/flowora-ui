@@ -1,11 +1,11 @@
 import { Outlet } from "react-router";
-import AppSidebar from "~/components/layout/sidebar/AppSidebar";
+import AppSidebar from "@/components/layout/sidebar/AppSidebar";
 import {
     SidebarInset,
     SidebarProvider,
     SidebarTrigger,
-} from "~/components/ui/sidebar";
-import { TooltipProvider } from "~/components/ui/tooltip";
+} from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function RootLayout() {
     return (

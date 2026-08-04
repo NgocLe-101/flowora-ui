@@ -38,7 +38,7 @@ import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from "~/components/ui/collapsible";
+} from "@/components/ui/collapsible";
 import StatusIcon from "./StatusIcon";
 import NavUser from "./NavUser";
 

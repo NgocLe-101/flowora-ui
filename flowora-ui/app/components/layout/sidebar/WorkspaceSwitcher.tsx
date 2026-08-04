@@ -7,12 +7,12 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "~/components/ui/sidebar";
+} from "@/components/ui/sidebar";
 import FloworaMark from "./FloworaMark";
 
 const workspaces = [
