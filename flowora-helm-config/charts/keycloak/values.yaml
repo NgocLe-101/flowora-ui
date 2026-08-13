@@ -1,0 +1,19 @@
+vault:
+  address: "http://vault.vault-system.svc.cluster.local:8200"
+  mountPath: "secret"
+  secretStoreName: vault-backend
+  serviceAccountName: external-secrets-sa
+  role: keycloak-role
+  refreshInterval: "1h"
+  dbPath: "keycloak/db"
+  adminPath: "keycloak/admin"
+
+keycloak:
+  auth:
+    existingSecret: keycloak-admin-secret
+  externalDatabase:
+    existingSecret: keycloak-db-secret
+    database: keycloak
+  proxy: edge
+  ingress:
+    enabled: true
